@@ -1,0 +1,39 @@
+on: [push]
+
+name: Linux_Container_Nginx_Workflow
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+
+    steps:
+    - name: 'Checkout Github Action'
+      uses: actions/checkout@master
+
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 'Listando webapp'
+      run: |
+        az webapp list -o table
+
+    - name: Auth, build and push docker image
+      run: |
+        docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+        docker build . -t joaolms/tests:v${GITHUB_RUN_NUMBER} -f Dockerfile
+        docker tag joaolms/tests:v${GITHUB_RUN_NUMBER} joaolms/tests:latest
+        docker push joaolms/tests:v${GITHUB_RUN_NUMBER}
+        docker push joaolms/tests:latest
+
+    # - uses: azure/webapps-deploy@v2
+    #   with:
+    #     app-name: 'web-app-tests'
+    #     images: 'joaolms/tests:${GITHUB_RUN_NUMBER}'
+    #     startup-command: ''
