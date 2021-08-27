@@ -1,14 +1,13 @@
 name: Linux_Container_Nginx_Workflow
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 env:
-  AZURE_WEBAPP_NAME: 'web-app-tests'
+  AZURE_WEBAPP_NAME: 'webapp-dev-atl-09876'
   CONTAINER_REGISTRY: 'joaolms/tests'
-  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
 
 jobs:
   build-and-delivery:
@@ -32,6 +31,7 @@ jobs:
         docker push ${{ env.CONTAINER_REGISTRY }}:latest
 
   deploy:
+
     needs: [build-and-delivery]
     runs-on: ubuntu-latest
 
