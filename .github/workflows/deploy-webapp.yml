@@ -1,15 +1,18 @@
-on: [push]
-
 name: Linux_Container_Nginx_Workflow
 
+on: [push]
+
+env:
+  AZURE_WEBAPP_NAME: 'web-app-tests'
+  CONTAINER_REGISTRY: 'joaolms/tests'
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+
 jobs:
-  build-and-deploy:
+  build-and-delivery:
     runs-on: ubuntu-latest
-    env:
-      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
 
     steps:
     - name: 'Checkout Github Action'
@@ -20,20 +23,26 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: 'Listando webapp'
-      run: |
-        az webapp list -o table
-
     - name: Auth, build and push docker image
       run: |
         docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-        docker build . -t joaolms/tests:v${GITHUB_RUN_NUMBER} -f Dockerfile
-        docker tag joaolms/tests:v${GITHUB_RUN_NUMBER} joaolms/tests:latest
-        docker push joaolms/tests:v${GITHUB_RUN_NUMBER}
-        docker push joaolms/tests:latest
+        docker build . -t ${{ env.CONTAINER_REGISTRY }}:v${GITHUB_RUN_NUMBER} -f Dockerfile
+        docker tag ${{ env.CONTAINER_REGISTRY }}:v${GITHUB_RUN_NUMBER} ${{ env.CONTAINER_REGISTRY }}:latest
+        docker push ${{ env.CONTAINER_REGISTRY }}:v${GITHUB_RUN_NUMBER}
+        docker push ${{ env.CONTAINER_REGISTRY }}:latest
 
-    # - uses: azure/webapps-deploy@v2
-    #   with:
-    #     app-name: 'web-app-tests'
-    #     images: 'joaolms/tests:${GITHUB_RUN_NUMBER}'
-    #     startup-command: ''
+  deploy:
+    needs: [build-and-delivery]
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 'Deploy to Azure Web App for Container'
+      uses: azure/webapps-deploy@v2
+      with: 
+        app-name: ${{ env.AZURE_WEBAPP_NAME }} 
+        images: ${{ env.CONTAINER_REGISTRY }}:v${{ github.run_number }}
