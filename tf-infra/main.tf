@@ -47,6 +47,7 @@ resource "azurerm_app_service" "webapp_dev_atl" {
   site_config {
     linux_fx_version = "DOCKER|joaolms/tests:latest"
     always_on        = "false"
+    health_check_path = var.webapp_health_check_path
     app_command_line = ""
   }
 

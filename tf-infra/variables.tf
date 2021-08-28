@@ -16,6 +16,12 @@ variable "webapp_name" {
   default     = "webapp-atl-09876"
 }
 
+variable "webapp_health_check_path" {
+  description = "Path para monitoramento via health check"
+  type        = string
+  default     = "/"
+}
+
 variable "terraform_organization" {
   description = "Orzanização que será usada no Terraform Cloud"
   type = string
