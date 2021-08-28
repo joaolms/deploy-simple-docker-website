@@ -5,6 +5,15 @@ terraform {
       version = "2.74.0"
     }
   }
+
+  backend "remote" {
+    hostname = "app.terraform.io"
+    organization = "orgjoaolms"
+
+    workspaces {
+      name = "deploy-simple-docker-website"
+    }
+  }
 }
 
 provider "azurerm" {
@@ -41,9 +50,14 @@ resource "azurerm_app_service" "webapp_dev_atl_09876" {
     app_command_line = ""
   }
 
+  lifecycle {
+    ignore_changes = [
+      site_config.0.linux_fx_version,
+    ]
+  }
+
   app_settings = {
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
     "DOCKER_REGISTRY_SERVER_URL"          = "https://index.docker.io"
   }
-
 }
