@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'tf-infra/**'
 
 env:
   AZURE_WEBAPP_NAME: 'webapp-dev-atl-09876'
