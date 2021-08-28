@@ -37,7 +37,7 @@ VARIÁVEL|DESCRIÇÃO|VALOR PADRÃO
 --------|---------|------------
 location|Região do Azure|eastus
 webapp_resource_group|Grupo de Recursos que será criado pelo Terraform para o Webapp|WEBAPP-ATL
-webapp_name|Nome do Azure WebApp|webapp-atl-09876
+webapp_name|Nome do Azure WebApp, deve ser um nome único pois será utilizado como URL|webapp-atl-09876
 webapp_health_check_path|Path para monitoramento via health check| /
 terraform_organization|Orzanização que será usada no Terraform Cloud|orgjoaolms
 terraform_workspace|Workspace dentro da organização do Terraform Cloud|deploy-simple-docker-website
@@ -59,3 +59,7 @@ Ao finalizar as configurações da workspace no Terraform Cloud, clique no botã
 ## Deploy da uma nova versão.
 O workflow do github action está configurado no aruivo ```.github/workflows/deploy-webap.yml``` e só é executado com alterações na branch **main**
 Altere o arquivo ```src/index.html``` e confirme na branch **main**.
+
+## URL do Webapp
+A url é formanda pelo nome do webapp e o sufixo **.azurewebsites.net**
+https://webapp-atl-09876.azurewebsites.net/
