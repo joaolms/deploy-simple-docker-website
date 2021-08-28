@@ -1,7 +1,7 @@
 variable "location" {
   description = "Region"
   type        = string
-  default     = "eastus"
+  default     = "brazilsouth"
 }
 
 variable "webapp_resource_group" {
