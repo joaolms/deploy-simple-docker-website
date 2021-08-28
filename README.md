@@ -38,6 +38,7 @@ VARIÁVEL|DESCRIÇÃO|VALOR PADRÃO
 location|Região do Azure|eastus
 webapp_resource_group|Grupo de Recursos que será criado pelo Terraform para o Webapp|WEBAPP-ATL
 webapp_name|Nome do Azure WebApp|webapp-atl-09876
+webapp_health_check_path|Path para monitoramento via health check| /
 terraform_organization|Orzanização que será usada no Terraform Cloud|orgjoaolms
 terraform_workspace|Workspace dentro da organização do Terraform Cloud|deploy-simple-docker-website
 
