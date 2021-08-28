@@ -8,7 +8,7 @@ on:
       - 'tf-infra/**'
 
 env:
-  AZURE_WEBAPP_NAME: 'webapp-dev-atl-09876'
+  AZURE_WEBAPP_NAME: 'webapp-atl-09876'
   CONTAINER_REGISTRY: 'joaolms/tests'
 
 jobs:
