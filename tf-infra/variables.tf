@@ -1,13 +1,19 @@
 variable "location" {
   description = "Region"
   type        = string
-  default     = "brazilsouth"
+  default     = "eastus"
 }
 
 variable "webapp_resource_group" {
   description = "Resource Group"
   type        = string
-  default     = "WEBAPP-ATL"
+  default     = "WebApp-RG"
+}
+
+variable "webapp_name" {
+  description = "Nome do Azure WebApp"
+  type        = string
+  default     = "webapp-atl-09876"
 }
 
 variable "terraform_organization" {

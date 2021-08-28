@@ -38,8 +38,8 @@ resource "azurerm_app_service_plan" "asp_webapp_dev" {
   }
 }
 
-resource "azurerm_app_service" "webapp_dev_atl_09876" {
-  name                = "webapp-dev-atl-09876"
+resource "azurerm_app_service" "webapp_dev_atl" {
+  name                = var.webapp_name
   location            = azurerm_resource_group.rg_webapp.location
   resource_group_name = azurerm_resource_group.rg_webapp.name
   app_service_plan_id = azurerm_app_service_plan.asp_webapp_dev.id
