@@ -8,10 +8,9 @@ terraform {
 
   backend "remote" {
     hostname = "app.terraform.io"
-    organization = var.terraform_organization
-
+    organization = "orgjoaolms"
     workspaces {
-      name = var.terraform_workspace
+      name = "deploy-simple-docker-website"
     }
   }
 }
